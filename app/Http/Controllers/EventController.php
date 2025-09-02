@@ -4,13 +4,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Builders\EventBuilder;
+use App\Http\Controllers\Traits\IsCompleted;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    use IsCompleted;
+
     private function getEventBuilder(): EventBuilder
     {
         return new EventBuilder();
@@ -18,8 +20,9 @@ class EventController extends Controller
 
     public function all(Request $request)
     {
+        $completed = $this->isCompleted();
         $user = $request->user();
-        return Event::where('user_id', $user->id)->get();
+        return Event::where('user_id', $user->id)->where('completed', $completed)->get();
     }
 
     public function create(Request $request): Event
@@ -55,9 +58,18 @@ class EventController extends Controller
 
     public function byType(Request $request, string $type)
     {
+        $complete = $this->isCompleted();
         $user = $request->user();
         $type = EventType::where('code', $type)->first();
 
-        return Event::where('user_id', $user->id)->where('type_id', $type->id)->get();
+        return Event::where('user_id', $user->id)->where('type_id', $type->id)->where('completed', $complete)->get();
+    }
+
+    public function statusChange(Event $event): Event
+    {
+        $event->completed = !$event->completed;
+        $event->save();
+
+        return $event;
     }
 }

@@ -12,19 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
-            $table->text('name');
-        });
-
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
             $table->text('name');
             $table->boolean('completed')->default(false);
-            $table->foreignId('type_id')->references('id')->on('event_types')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('activate_at')->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('goals');
     }
 };
