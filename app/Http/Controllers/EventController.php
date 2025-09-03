@@ -7,11 +7,17 @@ use App\Builders\EventBuilder;
 use App\Http\Controllers\Traits\IsCompleted;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Services\EventService;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
     use IsCompleted;
+
+    private function getEventService(): EventService
+    {
+        return new EventService();
+    }
 
     private function getEventBuilder(): EventBuilder
     {
@@ -20,9 +26,12 @@ class EventController extends Controller
 
     public function all(Request $request)
     {
-        $completed = $this->isCompleted();
         $user = $request->user();
-        return Event::where('user_id', $user->id)->where('completed', $completed)->get();
+        return $this->getEventService()::getEventsByParams(
+            user: $user,
+            completed: $this->isCompleted(),
+            date: $request->query('date')
+        );
     }
 
     public function create(Request $request): Event
@@ -58,11 +67,16 @@ class EventController extends Controller
 
     public function byType(Request $request, string $type)
     {
-        $complete = $this->isCompleted();
+        $completed = $this->isCompleted();
         $user = $request->user();
         $type = EventType::where('code', $type)->first();
 
-        return Event::where('user_id', $user->id)->where('type_id', $type->id)->where('completed', $complete)->get();
+        return $this->getEventService()::getEventsByParams(
+            user: $user,
+            completed: $completed,
+            date: $request->query('date'),
+            type: $type
+        );
     }
 
     public function statusChange(Event $event): Event

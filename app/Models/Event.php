@@ -11,7 +11,6 @@ class Event extends Model
     protected $fillable = [
         'name',
         'completed',
-        'activate_at',
         'user_id',
         'type_id',
     ];
@@ -21,11 +20,14 @@ class Event extends Model
         'type_id',
         'created_at',
         'updated_at',
+        'activate_at',
     ];
 
     protected $appends = [
         'user',
         'type',
+        'activateDate',
+        'activateTime',
     ];
 
     public function user(): BelongsTo
@@ -46,5 +48,15 @@ class Event extends Model
     public function getTypeAttribute()
     {
         return $this->type()->get()->first();
+    }
+
+    public function getActivateDateAttribute(): ?string
+    {
+        return $this->activate_at ? (new \DateTimeImmutable($this->activate_at))->format('Y-m-d') : null;
+    }
+
+    public function getActivateTimeAttribute(): ?string
+    {
+        return $this->activate_at ? (new \DateTimeImmutable($this->activate_at))->format('H:i:s') : null;
     }
 }
