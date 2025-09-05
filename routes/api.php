@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GoalController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,4 +42,9 @@ Route::middleware(['auth:sanctum'])->prefix('/goal')->group(function () {
         Route::delete('', [GoalController::class, 'delete']);
         Route::get('/statusChange', [GoalController::class, 'statusChange']);
     });
+});
+
+Route::middleware(['auth:sanctum'])->prefix('/profile')->group(function () {
+    Route::get('', [ProfileController::class, 'show']);
+    Route::put('', [ProfileController::class, 'update']);
 });

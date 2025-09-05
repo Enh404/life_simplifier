@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -29,6 +30,8 @@ class AuthController extends Controller
 
         // Генерируем токен
         $token = $user->createToken('api-token')->plainTextToken;
+
+        Profile::create(['user_id' => $user->id]);
 
         // Возвращаем ответ с токеном и данными пользователя
         return response()->json([
