@@ -13,6 +13,7 @@ class Event extends Model
         'completed',
         'user_id',
         'type_id',
+        'activate_at',
     ];
 
     protected $hidden = [

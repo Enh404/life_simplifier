@@ -81,9 +81,14 @@ class EventController extends Controller
 
     public function statusChange(Event $event): Event
     {
-        $event->completed = !$event->completed;
+        $event->completed = (int)!$event->completed;
         $event->save();
 
         return $event;
+    }
+
+    public function allTypes(): \Illuminate\Database\Eloquent\Collection
+    {
+        return EventType::all();
     }
 }

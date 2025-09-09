@@ -57,7 +57,7 @@ class EventBuilder extends AbstractBuilder
 
     private function withActivateAt(?\DateTimeImmutable $activateAt): self
     {
-        $this->set('activate_at', $activateAt);
+        $this->set('activate_at', $activateAt?->format('Y-m-d H:i:s'));
         return $this;
     }
 

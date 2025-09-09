@@ -1,0 +1,501 @@
+openapi: 3.0.0
+info:
+  title: APIs
+  version: 1.0.0
+paths:
+  /api/register:
+    post:
+      summary: "Регистрация"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerData'
+      responses:
+        "201":
+          description: "Успешная регистрация"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/registerAnswer'
+      tags:
+        - Auth
+  /api/login:
+    post:
+      summary: "Авторизация"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginData'
+      responses:
+        "200":
+          description: "Успешная авторизация"
+          content:
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+      tags:
+        - Auth
+  /api/logout:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Выход"
+      responses:
+        "200":
+          description: "Успешный выход"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: 'Logged out'
+      tags:
+        - Auth
+  /api/event:
+    get:
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/date'
+      summary: "Получение всех невыполненных событий с возможностью фильтрации по дате"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+      tags:
+        - Event
+    post:
+      security:
+        - bearerAuth: [ ]
+      summary: "Создание события"
+      requestBody:
+        $ref: '#/components/requestBodies/eventData'
+      responses:
+        "200":
+          description: "Успешное создание"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+      tags:
+        - Event
+  /api/event/completed:
+    parameters:
+      - $ref: '#/components/parameters/date'
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение всех выполненных событий с возможностью фильтрации по дате"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+      tags:
+        - Event
+  /api/event/types:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение всех типов событий"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/eventType'
+      tags:
+        - Event
+  /api/event/{code}:
+    parameters:
+      - $ref: '#/components/parameters/date'
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Получение всех невыполненных событий с фильтрацией по типу и возможностью фильтрации по дате"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+      tags:
+        - Event
+  /api/event/{code}/completed:
+    parameters:
+      - $ref: '#/components/parameters/date'
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Получение всех выполненных событий с фильтрацией по типу и возможностью фильтрации по дате"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/event'
+      tags:
+        - Event
+  /api/event/{id}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение события по айди"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+      tags:
+        - Event
+    put:
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/eventData'
+      summary: "Изменение события по айди"
+      responses:
+        "200":
+          description: "Успешное изменение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+      tags:
+        - Event
+    delete:
+      security:
+        - bearerAuth: [ ]
+      summary: "Удаление события по айди"
+      responses:
+        "200":
+          description: "Успешное удаление"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+      tags:
+        - Event
+  /api/event/{id}/statusChange:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Изменение статуса события по айди"
+      responses:
+        "200":
+          description: "Успешное изменение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event'
+      tags:
+        - Event
+  /api/goal:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение всех невыполненных целей"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+    post:
+      security:
+        - bearerAuth: [ ]
+      summary: "Создание цели"
+      requestBody:
+        $ref: '#/components/requestBodies/goalData'
+      responses:
+        "200":
+          description: "Успешное создание"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+  /api/goal/completed:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение всех выполненных целей"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+  /api/goal/{id}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение цели по айди"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+    put:
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/goalData'
+      summary: "Изменение цели по айди"
+      responses:
+        "200":
+          description: "Успешное изменение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+    delete:
+      security:
+        - bearerAuth: [ ]
+      summary: "Удаление цели по айди"
+      responses:
+        "200":
+          description: "Успешное удаление"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+      tags:
+        - Goal
+  /api/goal/{id}/statusChange:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Изменение статуса цели по айди"
+      responses:
+        "200":
+          description: "Успешное изменение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goal'
+      tags:
+        - Goal
+  /api/profile:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение своего профиля"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/profile'
+      tags:
+        - Profile
+    put:
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/profileData'
+      summary: "Изменение своего профиля"
+      responses:
+        "200":
+          description: "Успешное изменение"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/profile'
+      tags:
+        - Profile
+
+components:
+  requestBodies:
+    eventData:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              name:
+                required: true
+                type: string
+              activateAt:
+                required: false
+                type: string
+                example: "2025-01-01 20:20:00"
+              type:
+                required: true
+                properties:
+                  code:
+                    required: true
+                    type: string
+    goalData:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              name:
+                required: true
+                type: string
+    profileData:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              birthday:
+                required: false
+                type: string
+              telegram:
+                required: false
+                type: string
+              height:
+                required: false
+                type: string
+              weight:
+                required: false
+                type: string
+  parameters:
+    date:
+      in: query
+      required: false
+      name: date
+      example: '2025-01-01'
+  schemas:
+    registerData:
+      required:
+        - name
+        - email
+        - password
+        - password_confirmation
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+    registerAnswer:
+      properties:
+        user:
+          $ref: '#/components/schemas/user'
+        token:
+          type: string
+    user:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+    loginData:
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    event:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        completed:
+          type: integer
+        user:
+          $ref: '#/components/schemas/user'
+        type:
+          $ref: '#/components/schemas/eventType'
+        activateDate:
+          type: string
+        activateTime:
+          type: string
+    eventType:
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+    goal:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        completed:
+          type: integer
+        user:
+          $ref: '#/components/schemas/user'
+    profile:
+      properties:
+        id:
+          type: integer
+        birthday:
+          type: string
+        telegram:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        user:
+          $ref: '#/components/schemas/user'
+
+

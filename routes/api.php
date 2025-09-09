@@ -20,15 +20,16 @@ Route::middleware(['auth:sanctum'])->prefix('/event')->group(function () {
     Route::get('', [EventController::class, 'all']);
     Route::get('/completed', [EventController::class, 'all']);
     Route::post('', [EventController::class, 'create']);
-    Route::prefix('/{eventType:code}')->group(function () {
-        Route::get('', [EventController::class, 'byType']);
-        Route::get('/completed', [EventController::class, 'byType']);
-    });
-    Route::prefix('/{event:id}')->group(function () {
+    Route::get('/types', [EventController::class, 'allTypes']);
+    Route::prefix('/{event:id}')->whereNumber('event')->group(function () {
         Route::get('', [EventController::class, 'show']);
         Route::put('', [EventController::class, 'update']);
         Route::delete('', [EventController::class, 'delete']);
         Route::get('/statusChange', [EventController::class, 'statusChange']);
+    });
+    Route::prefix('/{eventType:code}')->where(['eventType' => '[a-z]+'])->group(function () {
+        Route::get('', [EventController::class, 'byType']);
+        Route::get('/completed', [EventController::class, 'byType']);
     });
 });
 
