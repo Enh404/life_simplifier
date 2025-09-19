@@ -44,19 +44,19 @@ class ProfileBuilder extends AbstractBuilder
         return $this;
     }
 
-    private function withTelegram(string $telegram): self
+    private function withTelegram(?string $telegram): self
     {
         $this->set('telegram', $telegram);
         return $this;
     }
 
-    private function withHeight(float $height): self
+    private function withHeight(?float $height): self
     {
         $this->set('height', $height);
         return $this;
     }
 
-    private function withWeight(float $weight): self
+    private function withWeight(?float $weight): self
     {
         $this->set('weight', $weight);
         return $this;
