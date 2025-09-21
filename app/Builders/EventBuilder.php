@@ -25,8 +25,8 @@ class EventBuilder extends AbstractBuilder
             $type = EventType::where('code', $data['type']['code'])->first();
         }
         $activateAt = null;
-        if (array_key_exists('activateAt', $data) && !empty($data['activateAt'])) {
-            $activateAt = new \DateTimeImmutable($data['activateAt']);
+        if (array_key_exists('activate_at', $data) && !empty($data['activate_at'])) {
+            $activateAt = new \DateTimeImmutable($data['activate_at']);
         }
 
         $this->withName($this->getDataValue('name', $data))
