@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('type_id')->references('id')->on('event_types')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('activate_at')->nullable();
+            $table->text('repeat')->nullable();
             $table->timestamps();
         });
     }
@@ -35,5 +36,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('events');
+        Schema::dropIfExists('event_types');
     }
 };

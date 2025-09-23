@@ -7,6 +7,7 @@ use App\Builders\EventBuilder;
 use App\Http\Controllers\Traits\IsCompleted;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Repeat;
 use App\Services\EventService;
 use Illuminate\Http\Request;
 
@@ -81,14 +82,16 @@ class EventController extends Controller
 
     public function statusChange(Event $event): Event
     {
-        $event->completed = (int)!$event->completed;
-        $event->save();
-
-        return $event;
+        return $this->getEventService()::statusChange($event);
     }
 
     public function allTypes(): \Illuminate\Database\Eloquent\Collection
     {
         return EventType::all();
+    }
+
+    public function allRepeats(): array
+    {
+        return Repeat::cases();
     }
 }

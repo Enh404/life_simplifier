@@ -125,6 +125,26 @@ paths:
                   $ref: '#/components/schemas/eventType'
       tags:
         - Event
+  /api/event/repeats:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "Получение всех типов повторений"
+      responses:
+        "200":
+          description: "Успешное получение"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: [
+                  "yearly",
+                  "monthly",
+                  "weekly",
+                  "daily"
+                ]
+      tags:
+        - Event
   /api/event/{code}:
     parameters:
       - $ref: '#/components/parameters/date'
@@ -367,7 +387,7 @@ components:
               name:
                 required: true
                 type: string
-              activateAt:
+              activate_at:
                 required: false
                 type: string
                 example: "2025-01-01 20:20:00"
@@ -377,6 +397,10 @@ components:
                   code:
                     required: true
                     type: string
+              repeat:
+                required: false
+                type: string
+                example: 'yearly'
     goalData:
       required: true
       content:
@@ -464,6 +488,8 @@ components:
         activateDate:
           type: string
         activateTime:
+          type: string
+        repeat:
           type: string
     eventType:
       properties:

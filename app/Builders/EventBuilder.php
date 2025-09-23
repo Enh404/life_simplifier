@@ -5,8 +5,8 @@ namespace App\Builders;
 
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Repeat;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class EventBuilder extends AbstractBuilder
 {
@@ -28,11 +28,18 @@ class EventBuilder extends AbstractBuilder
         if (array_key_exists('activate_at', $data) && !empty($data['activate_at'])) {
             $activateAt = new \DateTimeImmutable($data['activate_at']);
         }
+        $repeat = null;
+        if (array_key_exists('repeat', $data) && !empty($data['repeat'])) {
+            $repeat = Repeat::tryFrom($data['repeat']);
+        } elseif ($type->code == 'birthday') {
+            $repeat = Repeat::YEARLY;
+        }
 
         $this->withName($this->getDataValue('name', $data))
             ->withUser($this->getDataValue('user', $data))
             ->withType($type)
-            ->withActivateAt($activateAt);
+            ->withActivateAt($activateAt)
+            ->withRepeat($repeat);
 
         return $this;
     }
@@ -61,6 +68,12 @@ class EventBuilder extends AbstractBuilder
         return $this;
     }
 
+    private function withRepeat(?Repeat $repeat): self
+    {
+        $this->set('repeat', $repeat?->value);
+        return $this;
+    }
+
     public function build(): Event
     {
         if (empty($this->event)) {
@@ -69,6 +82,7 @@ class EventBuilder extends AbstractBuilder
             $this->event->name = $this->getDataValue('name');
             $this->event->type_id = $this->getDataValue('type_id');
             $this->event->activate_at = $this->getDataValue('activate_at');
+            $this->event->repeat = $this->getDataValue('repeat');
         }
 
         return $this->event;

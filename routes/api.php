@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum'])->prefix('/event')->group(function () {
     Route::get('/completed', [EventController::class, 'all']);
     Route::post('', [EventController::class, 'create']);
     Route::get('/types', [EventController::class, 'allTypes']);
+    Route::get('/repeats', [EventController::class, 'allRepeats']);
     Route::prefix('/{event:id}')->whereNumber('event')->group(function () {
         Route::get('', [EventController::class, 'show']);
         Route::put('', [EventController::class, 'update']);
